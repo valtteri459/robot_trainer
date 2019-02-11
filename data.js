@@ -48,12 +48,13 @@ var loadData = () => {
 
 module.exports = () => {
   return new Promise((resolve, reject) => {
-    loadData().then(images => {
-      images = shuffle(images)
+    loadData().then(origImages => {
+      images = shuffle(origImages)
       console.log('loaded with '+images.length+' training images, splitting to two')
       let base = images.slice(0,Math.floor(images.length/2))
       let training = images.slice(Math.floor(images.length/2))
       var returnObject = {
+        origImages: origImages,
         images: base,
         trainImages: training,
         taken: 0,
@@ -91,6 +92,8 @@ module.exports = () => {
             this.taken++
             if(this.taken >= this.images.length) {
               this.taken = 0
+              this.origImages = shuffle(this.origImages)
+              this.images = this.origImages.slice(0,Math.floor(this.origImages.length/2))
               this.images = shuffle(this.images)
             }
           }
@@ -113,6 +116,8 @@ module.exports = () => {
             this.trainTaken++
             if(this.trainTaken >= this.trainImages.length) {
               this.trainTaken = 0
+              this.origImages = shuffle(this.origImages)
+              this.trainImages = this.origImages.slice(Math.floor(this.origImages.length/2))
               this.trainImages = shuffle(this.trainImages)
             }
           }
