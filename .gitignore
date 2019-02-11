@@ -1,0 +1,9 @@
+./training_material
+training_material
+training_material/
+training_material/*
+./node_modules
+node_modules
+node_modules/
+node_modules/*
+venv

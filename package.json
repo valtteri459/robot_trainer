@@ -1,0 +1,25 @@
+{
+  "name": "robot_trainer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valtteri459/robot_trainer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/valtteri459/robot_trainer/issues"
+  },
+  "homepage": "https://github.com/valtteri459/robot_trainer#readme",
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^0.2.3",
+    "@tensorflow/tfjs-node-gpu": "^0.2.1",
+    "jpeg-js": "^0.3.4",
+    "terminal-kit": "^1.26.11"
+  }
+}
