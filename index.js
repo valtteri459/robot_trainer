@@ -1,5 +1,19 @@
 const tf = require('@tensorflow/tfjs-node')
 console.log('backend in use:', tf.getBackend())
+function deltaToString(start, end) {
+  let isSec = end - start
+    var ms = isSec,
+        lm = ~(4 * !!isSec),  /* limit fraction */
+        fmt = new Date(ms).toISOString().slice(11, lm);
+
+    if (ms >= 8.64e7) {  /* >= 24 hours */
+        var parts = fmt.split(/:(?=\d{2}:)/);
+        parts[0] -= -24 * (ms / 8.64e7 | 0);
+        return parts.join(':');
+    }
+
+    return fmt;
+}
 
 const data = require('./data')
 data().then(async dataObject => {
@@ -40,6 +54,7 @@ data().then(async dataObject => {
   //kuinka monta kertaa
   const TRAIN_BATCHES = 5000
   console.log('data loaded :)')
+  var startTime = Date.now()
   let i = 0
   while (bestAccuracy < 0.99 && i < TRAIN_BATCHES) {
     const batch = dataObject.nextBatch(BATCH_SIZE);
@@ -70,7 +85,10 @@ data().then(async dataObject => {
             onBatchEnd: async (batch, logs) => {
             },
            onEpochEnd: async (epoch, logs) => {
-             console.log(epoch+'/500','epoch ended', 'loss:', logs.loss, 'accuracy;', logs.acc)                                    
+             /*process.stdout.clearLine()
+             process.stdout.cursorTo(0)
+             process.stdout.write(deltaToString(startTime, Date.now())+" - "+epoch+'/500','epoch ended', 'loss:', logs.loss, 'accuracy:', logs.acc)    */       
+             console.log(deltaToString(startTime, Date.now())+" - total accuracy: "+bestAccuracy+" - trainiing batch: "+i+" - "+epoch+'/500','epoch ended', 'loss:', logs.loss, 'accuracy:', logs.acc)                     
            }   
                                                                                 
         }  // end all callbacks
