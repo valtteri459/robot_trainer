@@ -19,6 +19,7 @@ const data = require('./data')
 data().then(async dataObject => {
   //mallin määritys
   const model = tf.sequential() //luodaan verkko
+  let uniqueName = "layer_id1"
   model.add(tf.layers.conv2d({
     inputShape: [100, 100, 3], //kuvat on 100x100 RGB kuvia
     kernelSize: 2, //loput ovat oletuksia ohjeista
@@ -32,7 +33,7 @@ data().then(async dataObject => {
                                                                                                                                                                           
   model.add(tf.layers.flatten());                                                                                                                                         
   model.add(tf.layers.dense({ units: 30, kernelInitializer: 'varianceScaling', activation: 'softmax' }));                                                                 
-  model.add(tf.layers.dense({ units: 5, activation: 'linear' }) ); 
+  model.add(tf.layers.dense({ units: 6, activation: 'linear' }) ); 
 
 
   //mallin koulutus, stokastinen gradienttilaskeuma
@@ -98,10 +99,8 @@ data().then(async dataObject => {
     const loss = history.history.loss[0];
     const accuracy = history.history.acc[0];
     
-    if ((i % 5 === 0 || accuracy > 0.99)){
+    if ((i % 5 === 0)){
       console.log('example')
-      console.log('saving model')
-      //await model.save('file://'+__dirname+'/models/'+accuracy+'-'+Date.now())
       tf.tidy(() => {
         let testAmount = 30
         let examples = dataObject.nextBatch(testAmount)
@@ -124,7 +123,7 @@ data().then(async dataObject => {
     i++
   }
   try {
-    await model.save('file://'+__dirname+'/models/complete-'+bestAccuracy+'-'+Date.now())
+    await model.save('file://'+__dirname+'/models/'+uniqueName+'-'+new Date().toISOString().split('T')[0]+'-complete-'+bestAccuracy)
   } catch(e) {
     console.log(e)
   }
@@ -134,9 +133,10 @@ data().then(async dataObject => {
     let output = model.predict(examples.xs.reshape([5, 100, 100, 3]))
     var labels = Array.from(examples.labels.argMax(1).dataSync())
     var predictions = Array.from(output.argMax(1).dataSync())
-    console.log(labels)
-    console.log(predictions)
-    console.log(examples.origLabels)
+    console.log('actual labels', labels)
+    console.log('predictions', predictions)
+    console.log('training data num', dataObject.images.length)
+    console.log('testing data num', dataObject.trainImages.length)
   })
 }).catch(console.log)
 

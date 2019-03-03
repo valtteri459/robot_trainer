@@ -79,7 +79,7 @@ module.exports = () => {
         },
         nextBatch(batchSize) {
           const batchImagesArray = new Int32Array(batchSize * IMAGE_SIZE)
-          const batchLabelsArray = new Uint8Array(batchSize*5)
+          const batchLabelsArray = new Uint8Array(batchSize*6)
           origLabels = []
           origImgs = []
           for(let i = 0;i < batchSize;i++) {
@@ -88,7 +88,7 @@ module.exports = () => {
             origLabels.push(label)
             origImgs.push(this.images[this.taken])
             batchImagesArray.set(image, i*IMAGE_SIZE)
-            batchLabelsArray[i*5+label] = 1
+            batchLabelsArray[i*6+label] = 1
             this.taken++
             if(this.taken >= this.images.length) {
               this.taken = 0
@@ -98,12 +98,12 @@ module.exports = () => {
             }
           }
           let xs = tf.tensor2d(batchImagesArray, [batchSize, IMAGE_SIZE])
-          let labels = tf.tensor2d(batchLabelsArray, [batchSize, 5])
+          let labels = tf.tensor2d(batchLabelsArray, [batchSize, 6])
           return {xs, labels, origLabels, origImgs}
         },
         nextTrainBatch(batchSize) {
           const batchImagesArray = new Int32Array(batchSize * IMAGE_SIZE)
-          const batchLabelsArray = new Uint8Array(batchSize*5)
+          const batchLabelsArray = new Uint8Array(batchSize*6)
           origLabels = []
           origImgs = []
           for(let i = 0;i < batchSize;i++) {
@@ -112,7 +112,7 @@ module.exports = () => {
             origLabels.push(label)
             origImgs.push(this.images[this.taken])
             batchImagesArray.set(image, i*IMAGE_SIZE)
-            batchLabelsArray[i*5+label] = 1
+            batchLabelsArray[i*6+label] = 1
             this.trainTaken++
             if(this.trainTaken >= this.trainImages.length) {
               this.trainTaken = 0
@@ -122,7 +122,7 @@ module.exports = () => {
             }
           }
           let xs = tf.tensor2d(batchImagesArray, [batchSize, IMAGE_SIZE])
-          let labels = tf.tensor2d(batchLabelsArray, [batchSize, 5])
+          let labels = tf.tensor2d(batchLabelsArray, [batchSize, 6])
           return {xs, labels, origLabels, origImgs}
         }
       }
