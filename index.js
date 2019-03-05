@@ -19,7 +19,7 @@ const data = require('./data')
 data().then(async dataObject => {
   //mallin määritys
   const model = tf.sequential() //luodaan verkko
-  let uniqueName = "layer_id1"
+  /*let uniqueName = "layer_id1"
   model.add(tf.layers.conv2d({
     inputShape: [100, 100, 3], //kuvat on 100x100 RGB kuvia
     kernelSize: 2, //loput ovat oletuksia ohjeista
@@ -33,7 +33,26 @@ data().then(async dataObject => {
                                                                                                                                                                           
   model.add(tf.layers.flatten());                                                                                                                                         
   model.add(tf.layers.dense({ units: 30, kernelInitializer: 'varianceScaling', activation: 'softmax' }));                                                                 
-  model.add(tf.layers.dense({ units: 6, activation: 'linear' }) ); 
+  model.add(tf.layers.dense({ units: 6, activation: 'linear' }) );*/
+
+  let uniqueName = 'layer_id3'
+  model.add(tf.layers.conv2d({
+    inputShape: [100, 100, 3], //kuvat on 100x100 RGB kuvia
+    kernelSize: 2,
+    filters: 32,
+    strides: 2,
+    activation: 'relu',
+    kernelInitializer: 'VarianceScaling'
+  }))
+  model.add(tf.layers.maxPooling2d({
+    poolSize: [2, 2],
+    strides: [2, 2]
+  }))                          
+  model.add(tf.layers.conv2d({ kernelSize: 2, filters: 32, strides: 8, activation: 'relu', kernelInitializer: 'varianceScaling' }));                                       
+  model.add(tf.layers.conv2d({ kernelSize: 2, filters: 64, strides: 4, activation: 'relu', kernelInitializer: 'varianceScaling' }));                                                                                                                                                                               
+  model.add(tf.layers.flatten());                                                                                                                                         
+  model.add(tf.layers.dense({ units: 32, kernelInitializer: 'varianceScaling', activation: 'softmax' }));
+  model.add(tf.layers.dense({ units: 6, activation: 'linear' }) );       
 
 
   //mallin koulutus, stokastinen gradienttilaskeuma
