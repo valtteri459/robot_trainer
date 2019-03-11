@@ -92,8 +92,6 @@ module.exports = () => {
             this.taken++
             if(this.taken >= this.images.length) {
               this.taken = 0
-              this.origImages = shuffle(this.origImages)
-              this.images = this.origImages.slice(0,Math.floor(this.origImages.length/2))
               this.images = shuffle(this.images)
             }
           }
@@ -116,8 +114,6 @@ module.exports = () => {
             this.trainTaken++
             if(this.trainTaken >= this.trainImages.length) {
               this.trainTaken = 0
-              this.origImages = shuffle(this.origImages)
-              this.trainImages = this.origImages.slice(Math.floor(this.origImages.length/2))
               this.trainImages = shuffle(this.trainImages)
             }
           }
